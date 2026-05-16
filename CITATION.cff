@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using these metadata."
+title: "brain-dump-to-build"
+abstract: >-
+  A deterministic CLI and Claude Code Skill that converts unstructured
+  brain-dump text into a structured Phase-0 project plan, mapped onto the
+  OCTALUME 8-phase SDLC framework.
+authors:
+  - family-names: "Harery"
+    given-names: "Mohamed"
+    email: "mohamed@harery.com"
+    website: "https://harery.com"
+version: "0.1.0"
+date-released: "2026-05-16"
+license: MIT
+repository-code: "https://github.com/Harery/brain-dump-to-build"
+url: "https://harery.com"
+keywords:
+  - software-engineering
+  - sdlc
+  - planning
+  - scaffolding
+  - claude-code
+  - octalume

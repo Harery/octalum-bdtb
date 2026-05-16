@@ -1,0 +1,53 @@
+[build-system]
+requires = ["hatchling>=1.18"]
+build-backend = "hatchling.build"
+
+[project]
+name = "brain-dump-to-build"
+version = "0.1.0"
+description = "From brain to build in 60 seconds. Turn a raw idea-dump into a structured, buildable project plan."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Mohamed Harery", email = "mohamed@harery.com" }]
+keywords = ["scaffolding", "planning", "sdlc", "claude", "claude-code", "brainstorm", "ideation", "octalume"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Code Generators",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "ruff>=0.4"]
+llm = []  # placeholder; users opt in to anthropic/openai/ollama themselves
+
+[project.scripts]
+brain-dump-to-build = "brain_dump_to_build.cli:main"
+b2b = "brain_dump_to_build.cli:main"
+
+[project.urls]
+Homepage = "https://harery.com"
+Repository = "https://github.com/Harery/brain-dump-to-build"
+Issues = "https://github.com/Harery/brain-dump-to-build/issues"
+Related = "https://github.com/Harery/OCTALUME"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/brain_dump_to_build"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra -q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
