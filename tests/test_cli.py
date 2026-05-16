@@ -1,10 +1,8 @@
-import os
 from pathlib import Path
 
 import pytest
 
-from brain_dump_to_build.cli import main, build_parser
-
+from brain_dump_to_build.cli import build_parser, main
 
 SAMPLE = """# Sample App
 

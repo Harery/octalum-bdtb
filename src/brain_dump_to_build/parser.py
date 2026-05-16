@@ -10,8 +10,6 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
-from typing import List
-
 
 # Domain signals — keyword buckets that hint at the project type.
 DOMAIN_SIGNALS = {
@@ -96,12 +94,12 @@ class Project:
 
     title: str = "Untitled Project"
     summary: str = ""
-    domains: List[str] = field(default_factory=list)
-    goals: List[str] = field(default_factory=list)
-    features: List[str] = field(default_factory=list)
-    risks: List[str] = field(default_factory=list)
-    unknowns: List[str] = field(default_factory=list)
-    constraints: List[str] = field(default_factory=list)
+    domains: list[str] = field(default_factory=list)
+    goals: list[str] = field(default_factory=list)
+    features: list[str] = field(default_factory=list)
+    risks: list[str] = field(default_factory=list)
+    unknowns: list[str] = field(default_factory=list)
+    constraints: list[str] = field(default_factory=list)
     raw: str = ""
 
     @property
@@ -151,7 +149,7 @@ def _extract_summary(text: str) -> str:
     return ""
 
 
-def _detect_domains(text: str) -> List[str]:
+def _detect_domains(text: str) -> list[str]:
     text_l = text.lower()
     scored = []
     for domain, signals in DOMAIN_SIGNALS.items():
@@ -162,7 +160,7 @@ def _detect_domains(text: str) -> List[str]:
     return [d for _, d in scored] or ["generic"]
 
 
-def _extract_bullets(text: str) -> List[str]:
+def _extract_bullets(text: str) -> list[str]:
     return [m.group(1).strip() for m in _BULLET_RE.finditer(text)]
 
 

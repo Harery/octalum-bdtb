@@ -6,10 +6,8 @@ Pure string templates — no Jinja dependency, keeps install lean.
 from __future__ import annotations
 
 from datetime import date
-from typing import List
 
 from .parser import Project
-
 
 # --- File/folder tree suggestions by domain --------------------------------
 
@@ -116,7 +114,7 @@ OCTALUME_PHASES = [
 ]
 
 
-def _bullets(items: List[str], empty: str = "_(none detected — please review)_") -> str:
+def _bullets(items: list[str], empty: str = "_(none detected — please review)_") -> str:
     if not items:
         return empty
     return "\n".join(f"- {x}" for x in items)

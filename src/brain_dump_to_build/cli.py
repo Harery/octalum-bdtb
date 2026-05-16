@@ -6,14 +6,13 @@ import argparse
 import os
 import sys
 from pathlib import Path
-from typing import Optional
 
 from . import __version__
 from .parser import parse_brain_dump
 from .templates import render_all
 
 
-def _read_input(arg: Optional[str]) -> str:
+def _read_input(arg: str | None) -> str:
     """Read the brain-dump from a file path or stdin."""
     if arg and arg != "-":
         p = Path(arg)
@@ -40,10 +39,10 @@ def _ask_interactive() -> str:
         "5) What scares you / what could go wrong?",
         "6) Any open questions you don't know the answer to?",
     ]
-    chunks = []
+    chunks: list[str] = []
     for q in questions:
         print(q)
-        lines = []
+        lines: list[str] = []
         while True:
             try:
                 line = input()
@@ -145,7 +144,7 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main(argv: Optional[list] = None) -> int:
+def main(argv: list | None = None) -> int:
     args = build_parser().parse_args(argv)
 
     if args.mode == "interactive":
