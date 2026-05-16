@@ -14,12 +14,12 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
@@ -32,8 +32,11 @@ jobs:
       - name: Lint
         run: ruff check src tests
 
+      - name: Typecheck
+        run: mypy src
+
       - name: Test
-        run: pytest -q
+        run: pytest -q --strict-markers --strict-config --cov=brain_dump_to_build --cov-report=term-missing --cov-fail-under=80
 
       - name: Smoke test CLI
         run: |
