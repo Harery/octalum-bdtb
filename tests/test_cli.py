@@ -13,18 +13,21 @@ A small SaaS for testing. Users can log in.
 - unclear: should we use Stripe or Paddle?
 """
 
+CLASSIC = ["--target", "octalum-classic"]
+
 
 def test_argparse_defaults():
     args = build_parser().parse_args(["input.md"])
     assert args.mode == "quick"
     assert args.output_dir == "./plan"
+    assert args.target == "spec-kit"  # spec-kit is the default now
 
 
 def test_generates_all_files(tmp_path: Path):
     src = tmp_path / "dump.md"
     src.write_text(SAMPLE, encoding="utf-8")
     out = tmp_path / "plan"
-    rc = main([str(src), "--output-dir", str(out)])
+    rc = main([str(src), "--output-dir", str(out), *CLASSIC])
     assert rc == 0
     for name in ("STRUCTURE.md", "STACK.md", "PHASES.md", "RISKS.md", "BUILD_NOW.sh"):
         assert (out / name).exists(), f"missing {name}"
@@ -34,7 +37,7 @@ def test_build_now_is_executable(tmp_path: Path):
     src = tmp_path / "dump.md"
     src.write_text(SAMPLE, encoding="utf-8")
     out = tmp_path / "plan"
-    main([str(src), "--output-dir", str(out)])
+    main([str(src), "--output-dir", str(out), *CLASSIC])
     mode = (out / "BUILD_NOW.sh").stat().st_mode
     assert mode & 0o111, "BUILD_NOW.sh should be executable"
 
@@ -43,10 +46,10 @@ def test_no_overwrite_without_force(tmp_path: Path, capsys):
     src = tmp_path / "dump.md"
     src.write_text(SAMPLE, encoding="utf-8")
     out = tmp_path / "plan"
-    main([str(src), "--output-dir", str(out)])
+    main([str(src), "--output-dir", str(out), *CLASSIC])
     # Tamper.
     (out / "STACK.md").write_text("MINE", encoding="utf-8")
-    main([str(src), "--output-dir", str(out)])
+    main([str(src), "--output-dir", str(out), *CLASSIC])
     assert (out / "STACK.md").read_text() == "MINE"
 
 
@@ -54,15 +57,15 @@ def test_force_overwrites(tmp_path: Path):
     src = tmp_path / "dump.md"
     src.write_text(SAMPLE, encoding="utf-8")
     out = tmp_path / "plan"
-    main([str(src), "--output-dir", str(out)])
+    main([str(src), "--output-dir", str(out), *CLASSIC])
     (out / "STACK.md").write_text("MINE", encoding="utf-8")
-    main([str(src), "--output-dir", str(out), "--force"])
+    main([str(src), "--output-dir", str(out), "--force", *CLASSIC])
     assert (out / "STACK.md").read_text() != "MINE"
 
 
 def test_literal_string_input(tmp_path: Path):
     out = tmp_path / "plan"
-    rc = main(["# Tiny\n\nA tiny CLI tool with stdin.", "--output-dir", str(out)])
+    rc = main(["# Tiny\n\nA tiny CLI tool with stdin.", "--output-dir", str(out), *CLASSIC])
     assert rc == 0
     assert (out / "STACK.md").exists()
 
@@ -78,7 +81,7 @@ def test_phases_contains_octalume(tmp_path: Path):
     src = tmp_path / "d.md"
     src.write_text(SAMPLE, encoding="utf-8")
     out = tmp_path / "plan"
-    main([str(src), "--output-dir", str(out)])
+    main([str(src), "--output-dir", str(out), *CLASSIC])
     text = (out / "PHASES.md").read_text()
     assert "OCTALUME" in text
     assert "Phase 0" in text

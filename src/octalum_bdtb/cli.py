@@ -9,6 +9,7 @@ from pathlib import Path
 
 from . import __version__
 from .parser import parse_brain_dump
+from .speckit import render_all_speckit
 from .templates import render_all
 
 
@@ -120,8 +121,18 @@ def build_parser() -> argparse.ArgumentParser:
         "--mode",
         choices=("quick", "bootstrap", "interactive"),
         default="quick",
-        help="quick = plan only; bootstrap = plan + runnable BUILD_NOW.sh; "
-             "interactive = Q&A wizard to assemble the dump.",
+        help="quick = plan only; bootstrap = plan + runnable BUILD_NOW.sh "
+             "(octalum-classic only); interactive = Q&A wizard to assemble the dump.",
+    )
+    parser.add_argument(
+        "--target",
+        choices=("spec-kit", "octalum-classic"),
+        default="spec-kit",
+        help="Output shape. spec-kit (default) emits memory/constitution.md "
+             "and specs/<slug>/{spec,plan,research,data-model,quickstart,tasks}.md "
+             "+ contracts/, compatible with github/spec-kit's /speckit.* commands. "
+             "octalum-classic emits the v0.1 five-file layout "
+             "(STRUCTURE/STACK/PHASES/RISKS + BUILD_NOW.sh).",
     )
     parser.add_argument(
         "--llm",
@@ -160,15 +171,15 @@ def main(argv: list | None = None) -> int:
     out_dir = Path(args.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    artifacts = render_all(project)
-
-    if args.mode != "bootstrap":
-        # Still write BUILD_NOW.sh for reference, but mark it as a template.
-        pass
+    if args.target == "spec-kit":
+        artifacts = render_all_speckit(project)
+    else:
+        artifacts = render_all(project)
 
     written = []
     for name, content in artifacts.items():
         target = out_dir / name
+        target.parent.mkdir(parents=True, exist_ok=True)
         if target.exists() and not args.force:
             print(f"skip: {target} (exists; use --force to overwrite)", file=sys.stderr)
             continue
@@ -179,11 +190,17 @@ def main(argv: list | None = None) -> int:
 
     print(f"\nProject: {project.title}")
     print(f"Domain : {project.primary_domain}")
+    print(f"Target : {args.target}")
     print(f"Wrote  : {len(written)} file(s) → {out_dir}")
     for w in written:
         print(f"  - {w}")
 
-    if args.mode == "bootstrap":
+    if args.target == "spec-kit":
+        print(
+            f"\nNext: cd {out_dir} && open specs/{project.slug}/spec.md  "
+            f"# then /speckit.plan, /speckit.tasks, /speckit.implement"
+        )
+    elif args.mode == "bootstrap":
         print(f"\nNext: bash {out_dir / 'BUILD_NOW.sh'}")
     return 0
 

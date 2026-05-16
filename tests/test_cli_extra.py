@@ -22,12 +22,15 @@ A small SaaS for testing. Users can log in.
 """
 
 
+CLASSIC = ["--target", "octalum-classic"]
+
+
 def test_stdin_input(tmp_path: Path, monkeypatch):
     """When no positional arg and stdin is not a TTY, read from stdin."""
     monkeypatch.setattr("sys.stdin", io.StringIO(SAMPLE))
     monkeypatch.setattr("sys.stdin.isatty", lambda: False)
     out = tmp_path / "plan"
-    rc = main(["--output-dir", str(out)])
+    rc = main(["--output-dir", str(out), *CLASSIC])
     assert rc == 0
     assert (out / "STACK.md").exists()
 
@@ -36,7 +39,7 @@ def test_dash_means_stdin(tmp_path: Path, monkeypatch):
     monkeypatch.setattr("sys.stdin", io.StringIO(SAMPLE))
     monkeypatch.setattr("sys.stdin.isatty", lambda: False)
     out = tmp_path / "plan"
-    rc = main(["-", "--output-dir", str(out)])
+    rc = main(["-", "--output-dir", str(out), *CLASSIC])
     assert rc == 0
 
 
@@ -44,7 +47,7 @@ def test_bootstrap_mode_prints_next(tmp_path: Path, capsys):
     src = tmp_path / "dump.md"
     src.write_text(SAMPLE, encoding="utf-8")
     out = tmp_path / "plan"
-    rc = main([str(src), "--output-dir", str(out), "--mode", "bootstrap"])
+    rc = main([str(src), "--output-dir", str(out), "--mode", "bootstrap", *CLASSIC])
     assert rc == 0
     captured = capsys.readouterr()
     assert "BUILD_NOW.sh" in captured.out
@@ -55,7 +58,7 @@ def test_llm_stub_prints_notice(tmp_path: Path, capsys):
     src = tmp_path / "dump.md"
     src.write_text(SAMPLE, encoding="utf-8")
     out = tmp_path / "plan"
-    rc = main([str(src), "--output-dir", str(out), "--llm", "claude-sonnet"])
+    rc = main([str(src), "--output-dir", str(out), "--llm", "claude-sonnet", *CLASSIC])
     assert rc == 0
     captured = capsys.readouterr()
     assert "claude-sonnet" in captured.err
@@ -95,7 +98,7 @@ def test_unicode_input(tmp_path: Path):
         encoding="utf-8",
     )
     out = tmp_path / "plan"
-    rc = main([str(src), "--output-dir", str(out)])
+    rc = main([str(src), "--output-dir", str(out), *CLASSIC])
     assert rc == 0
     text = (out / "PHASES.md").read_text(encoding="utf-8")
     assert "🚀" in text or "Café" in text
@@ -110,7 +113,7 @@ def test_large_input_handled(tmp_path: Path):
             fh.write(f"- feature: do thing number {i}\n")
     assert src.stat().st_size > 1_000_000  # > 1 MB
     out = tmp_path / "plan"
-    rc = main([str(src), "--output-dir", str(out)])
+    rc = main([str(src), "--output-dir", str(out), *CLASSIC])
     assert rc == 0
     assert (out / "STRUCTURE.md").exists()
 
@@ -120,7 +123,7 @@ def test_output_dir_created_recursively(tmp_path: Path):
     src = tmp_path / "dump.md"
     src.write_text(SAMPLE, encoding="utf-8")
     out = tmp_path / "deeply" / "nested" / "plan"
-    rc = main([str(src), "--output-dir", str(out)])
+    rc = main([str(src), "--output-dir", str(out), *CLASSIC])
     assert rc == 0
     assert out.is_dir()
 
@@ -130,7 +133,7 @@ def test_output_writes_stay_inside_output_dir(tmp_path: Path):
     src = tmp_path / "dump.md"
     src.write_text(SAMPLE, encoding="utf-8")
     out = tmp_path / "plan"
-    main([str(src), "--output-dir", str(out)])
+    main([str(src), "--output-dir", str(out), *CLASSIC])
     out_resolved = out.resolve()
     for f in out.iterdir():
         assert out_resolved in f.resolve().parents or f.resolve().parent == out_resolved
@@ -178,7 +181,7 @@ def test_interactive_mode_full_run(tmp_path: Path, monkeypatch):
 
     monkeypatch.setattr("builtins.input", _input)
     out = tmp_path / "plan"
-    rc = main(["--mode", "interactive", "--output-dir", str(out)])
+    rc = main(["--mode", "interactive", "--output-dir", str(out), *CLASSIC])
     assert rc == 0
     assert (out / "STACK.md").exists()
 
