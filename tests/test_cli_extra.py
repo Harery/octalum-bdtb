@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 
-from brain_dump_to_build.cli import _ask_interactive, _read_input, main
+from octalum_bdtb.cli import _ask_interactive, _read_input, main
 
 SAMPLE = """# Sample App
 
@@ -73,7 +73,7 @@ def test_version_flag(capsys):
         main(["--version"])
     assert exc.value.code == 0
     captured = capsys.readouterr()
-    assert "brain-dump-to-build" in captured.out
+    assert "octalum-bdtb" in captured.out
 
 
 def test_empty_input_rejected(tmp_path: Path):
@@ -184,10 +184,10 @@ def test_interactive_mode_full_run(tmp_path: Path, monkeypatch):
 
 
 def test_module_entrypoint_runs():
-    """`python -m brain_dump_to_build --version` should exit 0."""
+    """`python -m octalum_bdtb --version` should exit 0."""
     proc = subprocess.run(
-        [sys.executable, "-m", "brain_dump_to_build", "--version"],
+        [sys.executable, "-m", "octalum_bdtb", "--version"],
         capture_output=True, text=True, timeout=30,
     )
     assert proc.returncode == 0
-    assert "brain-dump-to-build" in proc.stdout
+    assert "octalum-bdtb" in proc.stdout

@@ -11,7 +11,7 @@ body:
     id: version
     attributes:
       label: Version
-      description: Output of `brain-dump-to-build --version`.
+      description: Output of `octalum-bdtb --version`.
       placeholder: 0.1.0
     validations:
       required: true
@@ -39,7 +39,7 @@ body:
       label: Steps to reproduce
       placeholder: |
         1. Write a brain-dump containing …
-        2. Run `brain-dump-to-build dump.md -o ./plan`
+        2. Run `octalum-bdtb dump.md -o ./plan`
         3. See error
     validations:
       required: true

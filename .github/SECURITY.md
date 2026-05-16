@@ -17,7 +17,7 @@ Email **mohamed@harery.com** with:
 
 - A description of the issue
 - Steps to reproduce (a minimal brain-dump that triggers the issue is gold)
-- The version of `brain-dump-to-build` and Python you're using
+- The version of `octalum-bdtb` and Python you're using
 - Any suggested fix, if you have one
 
 You'll get an acknowledgement within **72 hours**. We aim to ship a fix

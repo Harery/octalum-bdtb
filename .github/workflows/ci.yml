@@ -36,11 +36,19 @@ jobs:
         run: mypy src
 
       - name: Test
-        run: pytest -q --strict-markers --strict-config --cov=brain_dump_to_build --cov-report=term-missing --cov-fail-under=80
+        run: pytest -q --strict-markers --strict-config --cov=octalum_bdtb --cov-report=term-missing --cov-fail-under=80
 
-      - name: Smoke test CLI
+      - name: Smoke test CLI (octalum-classic target)
         run: |
-          brain-dump-to-build examples/saas/brain-dump.md --output-dir /tmp/out
-          test -f /tmp/out/PHASES.md
-          test -f /tmp/out/STACK.md
-          test -x /tmp/out/BUILD_NOW.sh
+          octalum-bdtb examples/saas/brain-dump.md --output-dir /tmp/out-classic --target octalum-classic
+          test -f /tmp/out-classic/PHASES.md
+          test -f /tmp/out-classic/STACK.md
+          test -x /tmp/out-classic/BUILD_NOW.sh
+
+      - name: Smoke test CLI (spec-kit target, default)
+        run: |
+          octalum-bdtb examples/saas/brain-dump.md --output-dir /tmp/out-speckit
+          test -f /tmp/out-speckit/memory/constitution.md
+          ls /tmp/out-speckit/specs/*/spec.md
+          ls /tmp/out-speckit/specs/*/plan.md
+          ls /tmp/out-speckit/specs/*/tasks.md

@@ -1,6 +1,6 @@
 import pytest
 
-from brain_dump_to_build.parser import parse_brain_dump
+from octalum_bdtb.parser import parse_brain_dump
 
 
 def test_empty_input_raises():

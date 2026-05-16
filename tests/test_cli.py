@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from brain_dump_to_build.cli import build_parser, main
+from octalum_bdtb.cli import build_parser, main
 
 SAMPLE = """# Sample App
 

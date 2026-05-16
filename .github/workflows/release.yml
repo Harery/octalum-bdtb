@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/brain-dump-to-build
+      url: https://pypi.org/p/octalum-bdtb
     permissions:
       id-token: write  # OIDC trusted publishing
     steps:

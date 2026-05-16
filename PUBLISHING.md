@@ -1,4 +1,4 @@
-# Publishing `brain-dump-to-build` to PyPI
+# Publishing `octalum-bdtb` to PyPI
 
 This repo uses **PyPI Trusted Publishing (OIDC)** via GitHub Actions — no
 long-lived API tokens are stored anywhere. The release workflow lives at
@@ -10,13 +10,13 @@ long-lived API tokens are stored anywhere. The release workflow lives at
    - Go to https://pypi.org/manage/account/publishing/
    - Click "Add a new pending publisher"
    - Fill in:
-     - PyPI project name: `brain-dump-to-build`
+     - PyPI project name: `octalum-bdtb`
      - Owner: `Harery`
-     - Repository name: `brain-dump-to-build`
+     - Repository name: `octalum-bdtb`
      - Workflow name: `release.yml`
      - Environment name: `pypi`
 2. **Create the `pypi` environment in GitHub**:
-   - https://github.com/Harery/brain-dump-to-build/settings/environments
+   - https://github.com/Harery/octalum-bdtb/settings/environments
    - New environment → name it `pypi`
    - (Optional but recommended) Require a reviewer for deployments.
 3. **Optional TestPyPI dry-run**: repeat steps 1-2 on https://test.pypi.org and
@@ -27,7 +27,7 @@ No `PYPI_API_TOKEN` secret is needed — OIDC handles auth at publish time.
 ## Cutting a release
 
 ```bash
-# 1. Bump version in pyproject.toml and src/brain_dump_to_build/__init__.py
+# 1. Bump version in pyproject.toml and src/octalum_bdtb/__init__.py
 # 2. Update CHANGELOG.md
 git commit -am "release: v0.1.1"
 git tag -a v0.1.1 -m "v0.1.1"
@@ -43,8 +43,8 @@ The `Release` workflow will:
 ## Verifying
 
 ```bash
-pipx install brain-dump-to-build==0.1.1
-brain-dump-to-build --version
+pipx install octalum-bdtb==0.1.1
+octalum-bdtb --version
 ```
 
 ## Troubleshooting
@@ -52,4 +52,4 @@ brain-dump-to-build --version
 - **`invalid-publisher` error**: the GitHub environment name in
   `release.yml` (`pypi`) must match the trusted-publisher config on PyPI.
 - **Tag pushed but workflow didn't run**: confirm the tag matches `v*` and was
-  pushed to `Harery/brain-dump-to-build` (`git push origin v0.1.1`).
+  pushed to `Harery/octalum-bdtb` (`git push origin v0.1.1`).

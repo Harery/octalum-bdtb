@@ -1,4 +1,4 @@
-"""Heuristic parser: extract structure from a raw brain-dump.
+"""Heuristic parser: extract structure from a raw brain-dump (octalum-bdtb).
 
 This is deliberately deterministic. No LLM required for v0.1.0 — we use
 keyword spotting, sectioning, and lightweight NLP to slot raw text into

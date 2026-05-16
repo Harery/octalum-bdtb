@@ -3,14 +3,18 @@ requires = ["hatchling>=1.18"]
 build-backend = "hatchling.build"
 
 [project]
-name = "brain-dump-to-build"
-version = "0.1.0"
-description = "From brain to build in 60 seconds. Turn a raw idea-dump into a structured, buildable project plan."
+name = "octalum-bdtb"
+version = "0.2.0"
+description = "Brain-Dump-to-Build: turn raw idea-dumps into github/spec-kit-shaped plans (spec.md, plan.md, tasks.md). Ships as a Claude Code Skill in the OCTALUM family."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "Mohamed Harery", email = "mohamed@harery.com" }]
-keywords = ["scaffolding", "planning", "sdlc", "claude", "claude-code", "brainstorm", "ideation", "octalume"]
+keywords = [
+    "spec-kit", "spec-driven-development", "claude-code", "claude-code-skill",
+    "scaffolding", "planning", "sdlc", "brainstorm", "ideation",
+    "octalum", "octalume", "bdtb",
+]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Environment :: Console",
@@ -32,21 +36,25 @@ dev = ["pytest>=7", "pytest-cov>=4", "ruff>=0.4", "mypy>=1.8"]
 llm = []  # placeholder; users opt in to anthropic/openai/ollama themselves
 
 [project.scripts]
-brain-dump-to-build = "brain_dump_to_build.cli:main"
-b2b = "brain_dump_to_build.cli:main"
+octalum-bdtb = "octalum_bdtb.cli:main"
+bdtb = "octalum_bdtb.cli:main"
 
 [project.urls]
 Homepage = "https://harery.com"
-Repository = "https://github.com/Harery/brain-dump-to-build"
-Issues = "https://github.com/Harery/brain-dump-to-build/issues"
-Related = "https://github.com/Harery/OCTALUME"
+Repository = "https://github.com/Harery/octalum-bdtb"
+Issues = "https://github.com/Harery/octalum-bdtb/issues"
+"OCTALUM family" = "https://github.com/Harery/OCTALUME"
+"Composes with" = "https://github.com/github/spec-kit"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/brain_dump_to_build"]
+packages = ["src/octalum_bdtb"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra -q"
+
+[tool.coverage.run]
+source = ["octalum_bdtb"]
 
 [tool.ruff]
 line-length = 100

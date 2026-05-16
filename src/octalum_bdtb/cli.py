@@ -1,4 +1,4 @@
-"""Command-line interface for brain-dump-to-build."""
+"""Command-line interface for octalum-bdtb (Brain-Dump-to-Build)."""
 
 from __future__ import annotations
 
@@ -101,7 +101,7 @@ def _maybe_llm_enrich(project, model: str) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="brain-dump-to-build",
+        prog="octalum-bdtb",
         description="From brain to build in 60 seconds. "
                     "Turn a raw idea-dump into a structured project plan.",
     )

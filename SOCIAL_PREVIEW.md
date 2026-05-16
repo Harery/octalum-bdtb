@@ -10,7 +10,7 @@ Layout (left-to-right):
 ```
 ┌──────────────────────────────────────────────────────────┐
 │                                                          │
-│  brain-dump-to-build                          [logo]     │
+│  octalum-bdtb                          [logo]     │
 │  ───────────────────                                     │
 │                                                          │
 │  From brain to build in 60 seconds.                      │
