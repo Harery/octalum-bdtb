@@ -9,34 +9,41 @@ Layout (left-to-right):
 
 ```
 ┌──────────────────────────────────────────────────────────┐
+│  DWG. octalum-bdtb.04           PHASE-0 · OCTALUM FAMILY │
+│ ─────────────────────────────────────────────────────────│
 │                                                          │
-│  octalum-bdtb                          [logo]     │
-│  ───────────────────                                     │
+│            octalum-bdtb.                                 │
 │                                                          │
-│  From brain to build in 60 seconds.                      │
+│  A 12-stage Claude Code Skill — customer brain-dump →    │
+│  delivered product, with AI doing 90-95% of the work.    │
 │                                                          │
-│  raw text  ──►  STRUCTURE · STACK · PHASES · RISKS       │
-│                                                          │
-│                                            harery.com    │
+│ ─────────────────────────────────────────────────────────│
+│  HARERY.COM  ·  ARCHITECT       GITHUB.COM/HARERY/...    │
 └──────────────────────────────────────────────────────────┘
 ```
 
-## Typography
+A pre-rendered PNG matching the OCTALUM family BLUEPRINT aesthetic
+(paper `#EFEBE0` / ink `#1A2330` / accent `#B23A48`) lives at
+[`.github/assets/social-preview.png`](.github/assets/social-preview.png)
+and [`docs/assets/social-preview.png`](docs/assets/social-preview.png).
+Upload either via repo Settings → Social preview.
 
-- **Headline:** Inter Bold, 96px, near-black (`#0F172A`)
-- **Tagline:** Inter Medium, 48px, slate (`#475569`)
-- **Workflow row:** JetBrains Mono, 32px, amber (`#D97706`) for the arrow,
-  slate for the file names
+## Typography (OCTALUM family BLUEPRINT theme)
 
-## Colour palette
+- **Headline:** Georgia Bold (Fraunces in print), 120px, ink `#1A2330`
+- **Italic suffix + red accent period:** Georgia Italic, 120px, accent `#B23A48`
+- **Tagline:** Georgia Italic, auto-fit 22-34px, ink at 200/255 opacity
+- **DWG / family label:** Courier New, 18px, ink + accent
 
-| Use         | Hex      | Notes                            |
-|-------------|----------|----------------------------------|
-| Background  | `#F8FAFC` | Off-white, easy on eyes         |
-| Primary     | `#0F172A` | Near-black for headline         |
-| Secondary   | `#475569` | Slate for body text             |
-| Accent      | `#D97706` | Amber — matches "brain" warmth  |
-| Border      | `#E2E8F0` | Subtle frame                     |
+## Colour palette (BLUEPRINT family — same across all 5 repos)
+
+| Use         | Hex       | Notes                                |
+|-------------|-----------|--------------------------------------|
+| Background  | `#EFEBE0` | Warm paper cream                     |
+| Primary     | `#1A2330` | Deep navy ink                        |
+| Secondary   | `#1A2330` @ 60% | Ink muted for taglines         |
+| Accent      | `#B23A48` | Paper-architectural red              |
+| Grid lines  | `#1A2330` @ 2% | Subtle 32px grid background     |
 
 ## Production options
 

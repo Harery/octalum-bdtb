@@ -1,13 +1,22 @@
 # ALIGNMENT — `octalum-bdtb` ↔ `github/spec-kit`
 
+> **v0.3.0 clarification.** With the v0.3.0 repositioning, this document
+> covers the spec-kit compatibility of **Stage 7 only** within the larger
+> 12-stage BDTB pipeline. Stages 1–6 produce the business artifacts
+> (product spec, BRD, MVP, business plan, tech stack) that *precede* the
+> spec-kit constitution; Stages 8–12 produce the implementation artifacts
+> (logic, diagrams, codebase, monitoring, maintenance) that *follow* it.
+> spec-kit is the bridge between strategy and build.
+>
 > **Mission re-statement (from the project owner):**
 > *"BDTB was planned and implemented originally for Claude Code skills, as
 > it's developed to give MD files and structure that match and work with
 > github/spec-kit framework."*
 
-This document is an honest gap-analysis between what `octalum-bdtb`
-**emitted before v0.2.0** and what `github/spec-kit` actually expects on
-disk. It documents the realignment shipped in v0.2.0.
+This document is an honest gap-analysis between what `octalum-bdtb`'s
+deterministic CLI emitted in v0.1.0 and what `github/spec-kit` expects on
+disk. It documents the realignment shipped in v0.2.0 — which remains
+intact under v0.3.0 as the **Stage-7-only contract** of the bigger pipeline.
 
 ## Side-by-side: spec-kit ↔ pre-0.2.0 bdtb
 
@@ -71,6 +80,30 @@ hand-editing.** That contradicts the project's stated mission.
 
 ## Composing with spec-kit
 
+### Skill mode (full pipeline)
+
+The 12-stage skill produces the spec-kit constitution at Stage 7, after
+five stages of business discovery. The seam to spec-kit comes naturally:
+
+```
+S1 Intake → S2 BRD → S3 MVP → S4 BA → S5 BizPlan → S6 Tech Stack
+                                                       │
+                                                       ▼
+                                        S7 Constitution + CLAUDE.md
+                                                       │
+                                                       ▼
+                                          /speckit.plan  /speckit.tasks  /speckit.implement
+                                                       │
+                                                       ▼
+                                  S8 Logic → S9 Diagrams → S10 Build → S11 Monitor → S12 Maintain
+```
+
+### CLI mode (offline Stage-7 fallback)
+
+For non-interactive use — CI smoke checks, air-gapped environments, or
+when you already have a Stage-1 product spec and just want the
+constitution + spec-kit tree templated:
+
 ```bash
 # 1. Brain dump → spec-kit-shaped plan
 octalum-bdtb my-idea.md --output-dir .
@@ -81,5 +114,5 @@ octalum-bdtb my-idea.md --output-dir .
 /speckit.implement # executes
 ```
 
-The seam is clean: bdtb fills `specs/<feature>/*.md` from the brain-dump,
-spec-kit takes over for refinement and execution.
+Either way, the seam is clean: bdtb fills `specs/<feature>/*.md` from the
+brain-dump, spec-kit takes over for refinement and execution.
