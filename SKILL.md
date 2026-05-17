@@ -1,75 +1,100 @@
 ---
-name: brain-dump-to-build
-description: Use this skill when a user shares a raw, unstructured idea, brain-dump, voice-memo transcript, or rambling project description and wants to turn it into a structured, buildable project plan. Triggers include "I have an idea for...", "here's a brain dump", "help me plan this", "turn this into a project", "what should I build first", or when the user pastes a long unstructured chunk of project thoughts. Produces STRUCTURE.md, STACK.md, PHASES.md, RISKS.md, and an optional BUILD_NOW.sh bootstrap, mapped onto the OCTALUME 8-phase SDLC framework.
-version: 0.1.0
+name: octalum-bdtb
+description: Use this skill when a user shares a raw, unstructured idea, brain-dump, voice-memo transcript, or rambling project description and wants to turn it into a structured set of Markdown specs compatible with github/spec-kit's spec-driven-development workflow. Triggers include "I have an idea for...", "here's a brain dump", "help me plan this", "turn this into a project", "scaffold a spec-kit feature for...", "octalum-bdtb", or when the user pastes a long unstructured chunk of project thoughts and mentions spec-kit, /speckit.plan, /speckit.tasks, or /speckit.implement. Produces memory/constitution.md and specs/<feature>/{spec,plan,research,data-model,quickstart,tasks}.md plus contracts/, with the OCTALUM 8-phase SDLC mapping preserved inside plan.md.
+version: 0.2.0
 ---
 
-# brain-dump-to-build
+# octalum-bdtb — Brain-Dump → spec-kit-shaped plan
+
+Member of the OCTALUM family (sibling: OCTALUME, OCTALUM-PYLAB, OCTALUM-PULSE).
 
 ## When to use
 
-The user has an unstructured idea and needs structure. They have NOT yet:
-- decided on a stack
-- written user stories
-- broken the work into phases
-- identified explicit risks
+The user has an unstructured idea and wants to feed it into the
+[github/spec-kit](https://github.com/github/spec-kit) workflow. They have
+NOT yet:
 
-If they already have a spec, skip this skill and go straight to implementation.
+- written a feature spec (`spec.md`)
+- locked a tech stack (`plan.md`)
+- broken the work into ordered tasks (`tasks.md`)
+- captured project principles (`memory/constitution.md`)
 
-## What this skill does
+If they already have those, skip this skill and route them to
+`/speckit.plan`, `/speckit.tasks`, or `/speckit.implement` directly.
 
-Turns raw text into 5 markdown artifacts:
+## What this skill produces
 
-| File | Purpose |
-|------|---------|
-| `STRUCTURE.md` | Proposed file/folder tree + rationale |
-| `STACK.md`     | Recommended tech stack |
-| `PHASES.md`    | Task list mapped onto OCTALUME's 8 SDLC phases |
-| `RISKS.md`     | Risks, unknowns, open decisions |
-| `BUILD_NOW.sh` | Optional bootstrap script |
+A spec-kit-compatible filesystem layout, deterministically generated from
+the brain-dump:
 
-## How to invoke (preferred)
-
-If the `brain-dump-to-build` CLI is installed (`pipx install brain-dump-to-build`):
-
-```bash
-brain-dump-to-build path/to/dump.md --output-dir ./plan
+```
+<output-dir>/
+├── memory/
+│   └── constitution.md      ← 6 governing principles, edit before locking
+└── specs/<feature-slug>/
+    ├── spec.md              ← What & why (user stories, requirements)
+    ├── plan.md              ← How (tech stack + OCTALUM 8-phase mapping)
+    ├── research.md          ← Stack decisions, unknowns, spikes
+    ├── data-model.md        ← Entities, relations, PII
+    ├── quickstart.md        ← Local setup in <10 min
+    ├── contracts/README.md  ← Placeholder for API specs
+    └── tasks.md             ← Ordered [P]-marked task list
 ```
 
-For interactive Q&A when the user hasn't written the dump yet:
+Drop `<output-dir>/*` straight into a spec-kit-initialised repo and run
+`/speckit.plan` / `/speckit.tasks` / `/speckit.implement`.
+
+## How to invoke (preferred — installed CLI)
+
+If `octalum-bdtb` is installed (`pipx install octalum-bdtb`):
 
 ```bash
-brain-dump-to-build --mode interactive --output-dir ./plan
+octalum-bdtb path/to/dump.md --output-dir .            # spec-kit (default)
+octalum-bdtb path/to/dump.md --output-dir ./plan \
+             --target octalum-classic                  # legacy 5-file shape
 ```
 
-## How to invoke (inline fallback)
+For a Q&A wizard when the user hasn't written the dump yet:
 
-If the CLI is not installed, Claude should perform the same work inline:
+```bash
+octalum-bdtb --mode interactive --output-dir .
+```
+
+## How to invoke (inline fallback — no CLI installed)
+
+Claude should perform the same work inline, in this order:
 
 1. **Detect the primary domain** from keyword signals:
-   - saas: users, billing, stripe, dashboard, auth, tenant
-   - cli: command line, terminal, stdin, pipe, unix
-   - iot: sensor, esp32, mqtt, firmware, gpio
-   - data: etl, warehouse, dbt, airflow, pandas
-   - mobile: ios, android, react native, flutter
-   - ml: model, training, embedding, pytorch
+   - `saas`: users, billing, stripe, dashboard, auth, tenant
+   - `cli`: command line, terminal, stdin, pipe, unix
+   - `iot`: sensor, esp32, mqtt, firmware, gpio
+   - `data`: etl, warehouse, dbt, airflow, pandas
+   - `mobile`: ios, android, react native, flutter
+   - `ml`: model, training, embedding, pytorch
 
 2. **Extract** title (first heading or sentence), summary (first paragraph),
    features (bullets without risk/question markers), risks (bullets containing
    "risk/concern/scary"), unknowns (questions, "unclear", "tbd"),
    constraints (must/cannot/deadline/budget).
 
-3. **Render the 5 artifacts** following the templates in
-   `brain_dump_to_build/templates.py` — STRUCTURE.md gets a domain-appropriate
-   tree, STACK.md a table, PHASES.md the 8 OCTALUME phases with concrete
-   per-phase tasks seeded from the detected features.
+3. **Render the 8 spec-kit artifacts** following `src/octalum_bdtb/speckit.py`:
+   - `memory/constitution.md`: 6 sections (Code Quality, Testing, UX, Performance, Security, Decision Hygiene).
+   - `specs/<slug>/spec.md`: summary + user stories synthesised from features (US-01…US-05) + functional requirements + acceptance criteria.
+   - `specs/<slug>/plan.md`: tech-stack table from the domain + OCTALUM 8-phase mapping section.
+   - `specs/<slug>/research.md`: stack-decision rubric + open questions + risks + spikes.
+   - `specs/<slug>/data-model.md`: domain-appropriate entity starter table.
+   - `specs/<slug>/quickstart.md`: prerequisites + setup + run + verify.
+   - `specs/<slug>/contracts/README.md`: conventions for API/event specs.
+   - `specs/<slug>/tasks.md`: Phase 0–7 ordered list with **T0NN** ids and `[P]` parallelism markers.
 
-4. **Write the files** to a user-chosen output directory. Print a summary:
-   project title, primary domain, list of files written.
+4. **Write the files** to the user-chosen output directory and print a
+   summary: project title, primary domain, list of files written, the
+   suggested next step (`open specs/<slug>/spec.md`, then run
+   `/speckit.plan`).
 
-## OCTALUME phase mapping
+## OCTALUM phase mapping (preserved inside `plan.md`)
 
-The 8 phases the generated PHASES.md must reference, in order:
+The 8 phases the generated `plan.md` and `tasks.md` must reference, in order:
 
 0. Discovery & Framing
 1. Requirements & Architecture
@@ -82,14 +107,30 @@ The 8 phases the generated PHASES.md must reference, in order:
 
 ## Quality checks before handing back
 
-- [ ] All 5 files exist in `--output-dir`
-- [ ] `BUILD_NOW.sh` is `chmod +x`
-- [ ] STACK.md picks one concrete option per concern (not "X or Y or Z")
-- [ ] RISKS.md has at least 3 risks (synthesise reasonable ones if the dump didn't supply any)
-- [ ] PHASES.md references OCTALUME by name and links to Harery/OCTALUME
+- [ ] `memory/constitution.md` exists with 6 numbered principles.
+- [ ] `specs/<slug>/` contains all 7 expected files (+ `contracts/README.md`).
+- [ ] `plan.md` contains an "OCTALUM 8-phase mapping" section that references all 8 phases by number.
+- [ ] `tasks.md` uses **T0NN** task ids and includes at least one `[P]` parallel marker.
+- [ ] `data-model.md` picked the right starter for the detected domain.
+- [ ] `spec.md` synthesised at least 1 user story (US-01) from the brain-dump.
+
+## Composing with spec-kit
+
+The intended downstream workflow:
+
+```text
+brain dump  →  octalum-bdtb  →  specs/<feature>/*.md  →  /speckit.plan
+                                                      →  /speckit.tasks
+                                                      →  /speckit.implement
+```
+
+This skill fills the gap **before** `/speckit.specify` — it converts
+unstructured prose into structured spec-kit input so the spec-kit
+commands have something concrete to refine.
 
 ## Out of scope
 
-- Generating actual code (use OCTALUME Phase 3 for that)
-- LLM-based deep reasoning (gated behind `--llm` flag with explicit opt-in)
+- Generating actual implementation code (use `/speckit.implement` for that)
+- LLM-based deep reasoning (gated behind the `--llm` flag with explicit opt-in)
 - Posting anything publicly
+- Modifying an existing spec-kit project (`--force` is needed to overwrite)
