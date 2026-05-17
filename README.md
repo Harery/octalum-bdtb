@@ -1,238 +1,197 @@
-<!-- KEYWORDS: idea to code generator, github spec-kit, spec-driven development, spec-kit planner, brain dump to spec, claude code skill, gpt-engineer alternative, brain dump to project plan, unstructured idea to spec, AI project planner, cookiecutter alternative, agentic project generator, phase-0 SDLC, octalum, octalume, project specification generator, brainstorm to backlog, /speckit.plan, /speckit.tasks, /speckit.implement -->
+<!-- KEYWORDS: brain dump to spec, github spec-kit, spec-driven development, phase-0 feeder, claude code skill, spec-kit planner, /speckit.plan, /speckit.tasks, /speckit.implement, offline project planner, zero-dependency cli, deterministic spec generator, octalum, octalume, gpt-engineer alternative, aider alternative, cookiecutter alternative, agentic project bootstrap, constitution.md, tasks.md, plan.md, idea to plan in 60 seconds -->
 
-# octalum-bdtb — Brain-Dump → spec-kit-shaped plan
+<div align="center">
 
-> **Turn a messy brain-dump into a [github/spec-kit](https://github.com/github/spec-kit)-ready feature spec in 60 seconds.** A Claude Code Skill + zero-dependency Python CLI that converts an unstructured idea into `memory/constitution.md` + `specs/<feature>/{spec,plan,research,data-model,quickstart,tasks}.md` — fully offline, no API key required, then hand off to `/speckit.plan` or `/speckit.implement`.
+# octalum-bdtb
 
-Member of the **OCTALUM** family (siblings: [OCTALUME](https://github.com/Harery/OCTALUME) · [OCTALUM-PYLAB](https://github.com/Harery/OCTALUM-PYLAB) · [OCTALUM-PULSE](https://github.com/Harery/OCTALUM-PULSE)).
+**Paste a messy brain-dump. Get a full spec-kit feature folder in 60 seconds.**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![CI](https://github.com/Harery/octalum-bdtb/actions/workflows/ci.yml/badge.svg)](https://github.com/Harery/octalum-bdtb/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![pipx](https://img.shields.io/badge/install-pipx-3776AB.svg)](https://pypa.github.io/pipx/)
-[![PyPI](https://img.shields.io/pypi/v/octalum-bdtb.svg)](https://pypi.org/project/octalum-bdtb/)
+[![Coverage](https://img.shields.io/badge/coverage-96%25-brightgreen.svg)](#)
+[![GitHub stars](https://img.shields.io/github/stars/Harery/octalum-bdtb?style=social)](https://github.com/Harery/octalum-bdtb)
 
-`octalum-bdtb` is an **AI project planner** for the messiest moment in a project — between "I had an idea in the shower" and "I'm ready to write code." It is the **Phase-0 feeder** for [github/spec-kit](https://github.com/github/spec-kit)'s spec-driven-development workflow: instead of you hand-authoring `spec.md`/`plan.md`/`tasks.md`, you paste your brain dump and the tool emits a complete spec-kit feature folder, plus an `OCTALUM 8-phase` overlay inside `plan.md` so the two methodologies compose.
+</div>
 
-## Composes with github/spec-kit
+> The Phase-0 feeder for [github/spec-kit](https://github.com/github/spec-kit). Drop in an unstructured idea; out comes `memory/constitution.md` + a full `specs/<feature>/` folder ready for `/speckit.plan`, `/speckit.tasks`, `/speckit.implement`. Offline. Zero dependencies. No API key.
 
-```
-brain dump ── octalum-bdtb ──▶ specs/<feature>/spec.md
-                             │
-                             ├─▶ specs/<feature>/plan.md         (incl. OCTALUM 8-phase overlay)
-                             ├─▶ specs/<feature>/research.md
-                             ├─▶ specs/<feature>/data-model.md
-                             ├─▶ specs/<feature>/quickstart.md
-                             ├─▶ specs/<feature>/tasks.md
-                             ├─▶ specs/<feature>/contracts/
-                             └─▶ memory/constitution.md
-                                          │
-                                          └─▶ /speckit.plan ▶ /speckit.tasks ▶ /speckit.implement
-```
+<p align="right"><sub><code>DRAWING NO. 04.00  ·  REV. 2026.05  ·  SHEET 04 OF 05</code></sub></p>
 
-A worked example lives at [`examples/saas/output-spec-kit/`](examples/saas/output-spec-kit/) — every file the spec-kit `/speckit.*` commands expect, generated from a single 30-line brain dump.
+[Problem](#the-problem) · [Install](#install) · [Quickstart](#quickstart) · [What you get](#what-you-get) · [How it works](#how-it-works) · [Two output targets](#two-output-targets) · [Claude Code Skill](#use-it-as-a-claude-code-skill) · [Comparison](#comparison) · [FAQ](#faq) · [Documentation](#documentation) · [Roadmap](#roadmap)
 
-See [ALIGNMENT.md](ALIGNMENT.md) for the full mapping table and the gaps closed in v0.2.0.
+## The problem
 
-## Two output targets
-
-| `--target` | When to use | Writes to `<output-dir>/` |
-|---|---|---|
-| `spec-kit` *(default)* | You're using github/spec-kit, Claude Code, or any agentic tool that consumes spec-kit-shaped Markdown. | `memory/constitution.md` + `specs/<feature>/{spec,plan,research,data-model,quickstart,tasks}.md` + `contracts/` |
-| `octalum-classic` | You want the original 5-file output for human review or to feed straight into [OCTALUME](https://github.com/Harery/OCTALUME) without spec-kit. | `STRUCTURE.md` · `STACK.md` · `PHASES.md` · `RISKS.md` · `BUILD_NOW.sh` |
-
-Both targets are deterministic, offline, and use zero LLM tokens. Pass `--llm` to enrich (stub today; wired in v0.2.x).
+`github/spec-kit` expects a populated `specs/<feature>/` tree before `/speckit.plan` will do anything useful. Authoring `spec.md`, `plan.md`, `research.md`, `data-model.md`, `quickstart.md`, `tasks.md`, and `contracts/` by hand from a raw idea is the slowest part of spec-driven development. `octalum-bdtb` writes those files for you from a single brain-dump, so spec-kit has something concrete to refine.
 
 ## Install
 
 ```bash
-pipx install octalum-bdtb
+pipx install octalum-bdtb   # once PyPI publisher is registered; until then use the source install below
 ```
-
-Or pip / from source:
 
 ```bash
-pip install octalum-bdtb
-# or
-git clone https://github.com/Harery/octalum-bdtb
-cd octalum-bdtb && pip install -e .
+pip install git+https://github.com/Harery/octalum-bdtb       # current canonical install
 ```
 
-## Quickstart — from prompt to project in 3 commands
+## Quickstart
 
 ```bash
-echo "# Cat-sitter SaaS\nA marketplace for indie cat-sitters with Stripe billing." > dump.md
-octalum-bdtb dump.md --output-dir ./plan
-ls ./plan/specs/*/
-# spec.md  plan.md  research.md  data-model.md  quickstart.md  tasks.md  contracts/
-# Plus ./plan/memory/constitution.md — drop the whole tree into your spec-kit-enabled repo.
+echo "# Cat-sitter SaaS — marketplace + Stripe billing" > dump.md   # 1. write a dump (any length)
+octalum-bdtb dump.md --output-dir ./plan                            # 2. generate the spec-kit tree
+tree ./plan                                                         # 3. inspect — drop into your repo
 ```
 
-Need the classic 5-file output instead? Add `--target octalum-classic`:
+## What you get
+
+```text
+./plan/
+├── memory/
+│   └── constitution.md
+└── specs/
+    └── cat-sitter-saas/
+        ├── spec.md           # what & why — functional requirements, user stories
+        ├── plan.md           # technical strategy + OCTALUM 8-phase overlay
+        ├── research.md       # stack decisions, unknowns
+        ├── data-model.md     # entities, schema
+        ├── quickstart.md     # how to run the feature once built
+        ├── tasks.md          # ordered task list with [P] parallel markers
+        └── contracts/
+            └── README.md     # placeholder for OpenAPI / GraphQL / RPC
+```
+
+A fully rendered worked example lives at [`examples/saas/output-spec-kit/`](examples/saas/output-spec-kit/) — every file the spec-kit `/speckit.*` commands expect, generated from a 30-line dump.
+
+## How it works
+
+`octalum-bdtb` is a deterministic, template-driven parser. It tokenises the dump, classifies the project domain (SaaS / CLI / IoT / browser-ext / ML / generic), extracts features, risks, and stack hints, then renders each spec-kit artifact from a versioned Jinja-free Python template. No LLM. No network. The same input always produces the same output.
+
+```text
+brain dump ── octalum-bdtb ──▶ memory/constitution.md
+                             │
+                             └▶ specs/<feature>/spec.md
+                                                 plan.md       (incl. OCTALUM 8-phase overlay)
+                                                 research.md
+                                                 data-model.md
+                                                 quickstart.md
+                                                 tasks.md
+                                                 contracts/
+                                          │
+                                          └─▶ /speckit.plan ▶ /speckit.tasks ▶ /speckit.implement
+```
+
+See [ALIGNMENT.md](ALIGNMENT.md) for the full gap analysis between pre-0.2.0 output and spec-kit's filesystem convention, and the realignment shipped in v0.2.0.
+
+## Two output targets
+
+| `--target` | When to use | Files produced |
+|:--|:--|:--|
+| `spec-kit` *(default)* | You use github/spec-kit, Claude Code, or any agent that consumes spec-kit-shaped Markdown. | `memory/constitution.md` + `specs/<feature>/{spec,plan,research,data-model,quickstart,tasks}.md` + `contracts/` |
+| `octalum-classic` | You want the original 5-file shape for human review or to hand off to legacy [OCTALUME](https://github.com/Harery/OCTALUME) workflows. | `STRUCTURE.md` · `STACK.md` · `PHASES.md` · `RISKS.md` · `BUILD_NOW.sh` |
 
 ```bash
 octalum-bdtb dump.md --target octalum-classic --output-dir ./plan
-# STRUCTURE.md  STACK.md  PHASES.md  RISKS.md  BUILD_NOW.sh
 ```
 
-Pipe from clipboard or another command:
-
-```bash
-pbpaste | octalum-bdtb - --output-dir ./plan
-```
-
-Don't have a dump yet? Use **interactive Q&A mode**:
-
-```bash
-octalum-bdtb --mode interactive --output-dir ./plan
-```
-
-## Before & after — unstructured idea to spec
-
-**Input** (`examples/saas/brain-dump.md`, excerpt):
-
-```text
-# SaaS for indie therapists
-
-My sister is a therapist and she keeps complaining that all the
-practice-management SaaS out there is bloated…
-
-She wants to:
-- log sessions with clients (encrypted at rest)
-- send invoices via Stripe
-- schedule appointments (calendar sync)
-- HIPAA-ish privacy even though we're not pursuing full compliance day 1
-
-Risks:
-- Scary thing: HIPAA. If I screw up encryption I am toast.
-- Risk: Stripe taking 3% on already-tight margins.
-```
-
-**Output** (`examples/saas/output/PHASES.md`, excerpt):
-
-```markdown
-# PHASES — SaaS for indie therapists
-
-> Mapped onto **OCTALUME**'s 8-phase SDLC framework.
-
-### Phase 0 — Discovery & Framing
-  - [ ] Validate problem statement with 3+ potential users
-  - [ ] Define success metric (1 north-star + 2 supporting)
-  - [ ] Decide build vs. buy for risky components
-  - [ ] Resolve open questions (see RISKS.md)
-
-### Phase 3 — Build & Implementation
-  - [ ] Implement: log sessions with clients (encrypted at rest)
-  - [ ] Implement: send invoices via Stripe
-  - [ ] Implement: schedule appointments (calendar sync)
-  …
-```
-
-Full outputs: [`examples/saas/output/`](examples/saas/output/), [`examples/cli-tool/output/`](examples/cli-tool/output/), [`examples/iot/output/`](examples/iot/output/).
+Both targets are offline and use zero LLM tokens. Pass `--llm` to enrich (stubbed today; wiring tracked on the roadmap).
 
 ## Use it as a Claude Code Skill
 
-This project ships as a **Claude Code Skill**, so you can call it from inside any Claude Code conversation:
+The repo ships a Claude Code Skill manifest. Install once:
 
 ```bash
 cp SKILL.md ~/.claude/skills/octalum-bdtb.md
 ```
 
-Then say *"I have a brain dump, turn it into a project plan"* and Claude will invoke the skill — calling the CLI if installed, or producing the same artifacts inline if not. See [SKILL.md](SKILL.md) for the skill manifest.
+Then in any Claude Code conversation, say *"I have a brain dump, turn it into a spec-kit plan"* — Claude invokes the skill, calls the CLI if installed, or emits the same artifacts inline if not. See [SKILL.md](SKILL.md) for the manifest.
 
-## Modes
+## Comparison
 
-| Mode | Use when |
-|---|---|
-| `quick` (default) | You have a written dump — just give me the plan. |
-| `bootstrap` | Also generate a runnable `BUILD_NOW.sh` to scaffold. |
-| `interactive` | You don't have a dump yet — walk me through a Q&A. |
+|  | octalum-bdtb | gpt-engineer | Aider | Cookiecutter | bare spec-kit |
+|:--|:--|:--|:--|:--|:--|
+| Input form | Free-form brain-dump | Polished prompt | Existing repo | Pre-filled variables | Hand-authored `spec.md` |
+| Output | Populated `specs/<feature>/` tree | Full app source | Diffs to a repo | Templated repo skeleton | Whatever you typed |
+| LLM required | No | Yes | Yes | No | Optional |
+| Offline | Yes | No | No | Yes | Yes |
+| Target phase | Phase 0 — discovery | Phase 3 — build | Phase 3-4 — edit | Phase 1 — scaffold | Phase 1 — spec authoring |
 
-## Comparison — how it stacks up
-
-|  | octalum-bdtb | gpt-engineer | Aider | Cookiecutter |
-|---|---|---|---|---|
-| Input | Free-form text | Spec prompt | Existing repo | Variables |
-| Output | Plan + scaffold | Full app code | Diffs to existing code | Templated repo |
-| Offline (no API key) | **Yes (default)** | No | No | Yes |
-| OCTALUME-aware | **Yes** | No | No | No |
-| Claude Code Skill | **Yes** | No | No | No |
-| Sweet spot | Phase 0 / pre-spec | Phase 3 build | Phase 3-4 edit | Phase 1 scaffold |
-
-`octalum-bdtb` is deliberately the *earliest* tool in your toolchain — before you know your stack, before you have a spec.
+`octalum-bdtb` is deliberately the *earliest* tool in the chain — it fills the gap between "I had an idea" and "I have a spec-kit folder."
 
 ## FAQ
 
+### Does it work with github/spec-kit?
+
+Yes — that is the entire point. `--target spec-kit` (the default) writes the exact filesystem layout `/speckit.plan`, `/speckit.tasks`, and `/speckit.implement` expect. Drop the output into a spec-kit-enabled repo and the slash commands consume it directly. See [ALIGNMENT.md](ALIGNMENT.md).
+
 ### How is this different from gpt-engineer?
 
-**gpt-engineer** takes a polished prompt and *writes the app*. `octalum-bdtb` takes a messy idea and *writes the plan*. Different phase, different deliverable. Use octalum-bdtb first, then feed `STRUCTURE.md` and `PHASES.md` into gpt-engineer (or Aider, or Claude Code) as the spec.
+gpt-engineer takes a polished prompt and writes the app. `octalum-bdtb` takes a messy idea and writes the spec. Different phase, different artifact. Use `octalum-bdtb` first; hand its `specs/<feature>/` tree to gpt-engineer, Aider, or Claude Code as the source spec.
 
 ### Do I need an API key?
 
-**No.** The default path is 100% deterministic templates — no LLM, no key, no network. The optional `--llm` flag (Claude / OpenAI / Ollama) is opt-in.
+No. The default path is 100% deterministic templates — no LLM, no network, no key. The optional `--llm` flag (Claude / Ollama) is opt-in and stubbed pending wire-up.
 
 ### Can I use it with Claude Code?
 
-**Yes.** Copy [`SKILL.md`](SKILL.md) into `~/.claude/skills/` and Claude Code will invoke the skill automatically when you describe an idea. No subscription required beyond Claude itself.
+Yes. Copy `SKILL.md` into `~/.claude/skills/` and Claude Code invokes the skill automatically when you describe an idea. No additional subscription beyond Claude itself.
 
-### What gets generated?
+### What's the OCTALUM family connection?
 
-Five files: `STRUCTURE.md` (folder layout), `STACK.md` (tech picks), `PHASES.md` (OCTALUME phased task list), `RISKS.md` (risks register), and `BUILD_NOW.sh` (executable scaffold script). See [the outputs section](#what-you-get-the-5-outputs) above.
+`octalum-bdtb` is sheet 04 of a five-repo portfolio. The generated `plan.md` carries an "OCTALUM 8-phase mapping" section so [OCTALUME](https://github.com/Harery/OCTALUME)'s SDLC framework composes with spec-kit rather than competing with it.
 
-### Does it support language X?
+### When will it hit PyPI?
 
-The tool itself is language-agnostic — it picks a stack from your dump (Python, TypeScript, Go, Rust, embedded C, etc.). v0.1.0 ships templates for 6 domains: SaaS, CLI tool, IoT, browser extension, ML pipeline, and generic. Submit a PR to add yours; see `examples/` for the fixture format.
+The OIDC trusted-publishing pipeline is wired (see [PUBLISHING.md](PUBLISHING.md)); registration on pypi.org is the only remaining human step. Until then, `pip install git+https://github.com/Harery/octalum-bdtb` is canonical.
 
-### Is this a cookiecutter alternative?
+## Documentation
 
-Partly. Cookiecutter scaffolds from a *known* template with variables. octalum-bdtb *picks the template* from prose first, then scaffolds. Use cookiecutter when you know what you want; use this when you don't.
-
-### Why "Phase 0"?
-
-OCTALUME (the parent framework) numbers SDLC stages 0–7. Phase 0 is *Discovery & Framing* — the only phase that starts with no artifacts at all. That's the gap this tool fills.
-
-### How big can my brain-dump be?
-
-Tested up to 10 MB. The parser is O(n) and ships no LLM tokens, so cost scales with disk I/O, not API bill.
-
-## LLM enrichment (optional)
-
-```bash
-export ANTHROPIC_API_KEY=sk-ant-…
-octalum-bdtb dump.md --llm claude-sonnet
-```
-
-The `--llm` flag is **wired but not implemented** in v0.1.0 — the stub prints a notice and falls back to deterministic templates. v0.2.0 will wire Claude + Ollama.
-
-## The OCTALUME family
-
-This project is **Phase 0** for [OCTALUME](https://github.com/Harery/OCTALUME), an 8-phase SDLC framework by the same author. The generated `PHASES.md` is structured to drop straight into an OCTALUME workspace.
-
-```
-octalum-bdtb  →  OCTALUME  →  ship
-  (Phase 0)             (Phases 1-7)
-```
+- [ALIGNMENT.md](ALIGNMENT.md) — spec-kit gap analysis and realignment notes
+- [SKILL.md](SKILL.md) — Claude Code Skill manifest
+- [PUBLISHING.md](PUBLISHING.md) — PyPI / OIDC release flow
+- [`examples/saas/`](examples/saas/) · [`examples/cli-tool/`](examples/cli-tool/) · [`examples/iot/`](examples/iot/) — input dumps and rendered outputs
+- [CHANGELOG.md](CHANGELOG.md) — release history (v0.2.0 current)
 
 ## Roadmap
 
-- **v0.1** (2026-05): Deterministic templates, 6 domains, Claude Code Skill. *(this release)*
-- **v0.2** (2026-06): `--llm` actually wired (Anthropic + Ollama).
-- **v0.3** (2026-07): More domains (browser ext, game dev, agent).
-- **v0.4** (2026-08): OCTALUME workspace exporter (`--export octalume`).
-- **v0.5** (2026-09): VS Code extension.
-- **v1.0** (2026-Q4): Stable schema, plugin API for custom templates.
+- **2026-05** — v0.2.0 released: `--target spec-kit` default, 39/39 tests, 96% coverage.
+- **2026-06** — Register on pypi.org and cut v0.2.1 via the OIDC pipeline.
+- **2026-07** — Wire `--llm` enrichment (Anthropic + Ollama) behind the deterministic core.
+- **2026-08** — `--target aider` and `--target cursor` output modes.
+- **2026-09** — VS Code extension wrapping the CLI.
+- **2026-Q4** — v1.0: stable artifact schema, plugin API for third-party templates.
 
-## Contributing
+## Contributing · License · Security
 
-PRs welcome. Please:
+- Contributing — open an issue before non-trivial PRs; `pytest -q --cov=octalum_bdtb` must stay green at ≥80%; `ruff check` and `mypy src` must be clean.
+- License — MIT, see [LICENSE](LICENSE).
+- Security — report privately via [harery.com](https://harery.com); do not file public issues for vulnerabilities.
 
-1. Open an issue first for non-trivial changes.
-2. `pytest -q --cov=octalum_bdtb` must pass with ≥80% coverage.
-3. `ruff check src tests` and `mypy src` must be clean.
-4. New domain? Add a fixture in `examples/` showing input + output.
+<!-- ============================================================== -->
+<!-- UNIFIED OCTALUM FAMILY FOOTER — keep verbatim across every repo -->
+<!-- ============================================================== -->
 
-See [PUBLISHING.md](PUBLISHING.md) for the PyPI/OIDC release flow.
+---
 
-## License
+<div align="center">
 
-MIT © 2026 Mohamed Harery — [harery.com](https://harery.com)
+### Drawn by the same hand
+
+A working portfolio of digital infrastructure, designed and maintained by [**Mohamed Harery**](https://harery.com) — Architect of Digital Systems.
+
+| Sheet | Repo | What it is |
+|:--:|:--|:--|
+| 00 | [**harery.com**](https://github.com/Harery/Mo) | The studio — portfolio, ledger, contact |
+| 01 | [**OCTALUME**](https://github.com/Harery/OCTALUME) | 8-phase enterprise SDLC framework |
+| 02 | [**OCTALUM-PYLAB**](https://github.com/Harery/OCTALUM-PYLAB) | Python DSA & coding-interview prep |
+| 03 | [**OCTALUM-PULSE**](https://github.com/Harery/OCTALUM-PULSE) | Cross-distro Linux maintenance CLI |
+| 04 | [**octalum-bdtb**](https://github.com/Harery/octalum-bdtb) | Brain-dump → spec-kit-shaped plan |
+
+<sub>
+  <a href="https://harery.com">harery.com</a> ·
+  <a href="https://github.com/Harery">github.com/Harery</a> ·
+  <a href="https://www.linkedin.com/in/harery/">LinkedIn</a>
+</sub>
+
+<sub>BLUEPRINT · drawn 2026 · MIT-licensed code · all drawings reserved</sub>
+
+</div>
